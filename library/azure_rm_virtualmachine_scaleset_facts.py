@@ -168,7 +168,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             name=dict(type='str'),
             resource_group=dict(type='str'),
             format=dict(type='str'),
-            tags=dict(type='list')
+            tags=dict(type='list'),
             format=dict(
                 type='str',
                 choices=['default',
