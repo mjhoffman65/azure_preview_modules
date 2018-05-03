@@ -42,7 +42,7 @@ options:
             - 'full'
             - 'raw'
 
-extends_documentation_fragment:
+extends_documentation_fragment:x
     - azure
 
 author:
@@ -225,7 +225,29 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             results = [self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)]
 
         if self.format == 'full':
-            results[0]['FULL'] = True
+            results[0]['resource_group'] = item.resource_group
+            results[0]['name'] = item.name
+            results[0]['state'] = 'present'
+            results[0]['location'] = item.location
+            #results[0]['vm_size'] = 
+            #results[0]['capacity']
+            #results[0]['tier']
+            #results[0]['upgrade_policy']
+            #results[0]['admin_username']
+            #results[0]['admin_password']
+            #results[0]['ssh_password_enabled']
+            #results[0]['ssh_public_keys']
+            # image could be a dict, string, 
+            results[0]['image'] = item.properties.virtualMachineProfile.storageProfile.imageReference
+
+            #results[0]['os_disk_caching']
+            #results[0]['os_type']
+            #results[0]['managed_disk_type']
+            #results[0]['data_disks']
+            #results[0]['virtual_network_name']
+            #results[0]['subnet_name']
+            #results[0]['load_balancer']
+            #results[0]['remove_on_absent']
 
         return results
 
