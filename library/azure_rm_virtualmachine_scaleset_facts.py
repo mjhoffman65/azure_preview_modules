@@ -228,6 +228,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
 
             vmss = self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
 
+            results[0] = []
             results[0]['resource_group'] = self.resource_group
             results[0]['name'] = vmss['name']
             results[0]['state'] = 'present'
