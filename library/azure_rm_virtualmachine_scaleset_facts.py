@@ -230,7 +230,10 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             vmss = self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
 
             subnet_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['subnet']['id']
+            backend_address_pool_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['loadBalancerBackendAddressPools'][0]['id']
             subnet_name = re.sub('.*subnets\\/', '', subnet_id)
+            load_balancer_name =  re.sub('\\/backendAddressPools.*', '', re.sub('.*loadBalancers\\/', '', backend_address_pool_id))
+            virtual_network_name = re.sub('.*virtualNetworks\\/', '', re.sub('\\/subnets.*', '', subnet_id))
 
             results[0] = {}
             results[0]['resource_group'] = self.resource_group
@@ -252,9 +255,9 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             results[0]['os_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
             results[0]['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
             #results[0]['data_disks']
-            #results[0]['virtual_network_name']
+            results[0]['virtual_network_name'] = virtual_network_name
             results[0]['subnet_name'] = subnet_name
-            #results[0]['load_balancer']
+            results[0]['load_balancer'] = load_balancer_name
             #results[0]['remove_on_absent']
 
         return results
