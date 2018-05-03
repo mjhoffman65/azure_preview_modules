@@ -229,9 +229,9 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             vmss = self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
 
             results[0]['resource_group'] = self.resource_group
-            results[0]['name'] = vmss.name
+            results[0]['name'] = vmss['name']
             results[0]['state'] = 'present'
-            results[0]['location'] = vmss.location
+            results[0]['location'] = vmss['location']
             #results[0]['vm_size'] = 
             #results[0]['capacity']
             #results[0]['tier']
@@ -241,7 +241,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             #results[0]['ssh_password_enabled']
             #results[0]['ssh_public_keys']
             # image could be a dict, string, 
-            results[0]['image'] = vmss.properties.virtualMachineProfile.storageProfile.imageReference
+            results[0]['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
 
             #results[0]['os_disk_caching']
             #results[0]['os_type']
