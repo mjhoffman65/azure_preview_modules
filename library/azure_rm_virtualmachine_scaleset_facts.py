@@ -207,6 +207,42 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
         else:
             self.results['ansible_facts']['azure_vmss'] = self.list_items()
 
+        if self.format == 'full':
+            for index in range(len(self.results['ansible_facts']['azure_vmss'])):
+                vmss = self.results['ansible_facts']['azure_vmss'][index]
+                subnet_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['subnet']['id']
+                backend_address_pool_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['loadBalancerBackendAddressPools'][0]['id']
+                subnet_name = re.sub('.*subnets\\/', '', subnet_id)
+                load_balancer_name =  re.sub('\\/backendAddressPools.*', '', re.sub('.*loadBalancers\\/', '', backend_address_pool_id))
+                virtual_network_name = re.sub('.*virtualNetworks\\/', '', re.sub('\\/subnets.*', '', subnet_id))
+
+                updated = {}
+                updated['resource_group'] = self.resource_group
+                updated['name'] = vmss['name']
+                updated['state'] = 'present'
+                updated['location'] = vmss['location']
+                updated['vm_size'] = vmss['sku']['name'] 
+                updated['capacity'] = vmss['sku']['capacity']
+                updated['tier'] = vmss['sku']['tier']
+                updated['upgrade_policy'] = vmss['properties']['upgradePolicy']['mode']
+                #updated['admin_username']
+                #updated['admin_password']
+                #updated['ssh_password_enabled']
+                #updated['ssh_public_keys']
+                # image could be a dict, string, 
+                updated['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
+
+                updated['os_disk_caching'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
+                updated['os_type'] = 'Linux' #vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
+                updated['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
+                updated['data_disks'] = []
+                updated['virtual_network_name'] = virtual_network_name
+                updated['subnet_name'] = subnet_name
+                updated['load_balancer'] = load_balancer_name
+                #updated['remove_on_absent']
+
+                self.results['ansible_facts']['azure_vmss'][index] = updated
+
         return self.results
 
     def get_item(self):
@@ -224,41 +260,6 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
 
         if item and self.has_tags(item.tags, self.tags):
             results = [self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)]
-
-        if self.format == 'full':
-
-            vmss = self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
-
-            subnet_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['subnet']['id']
-            backend_address_pool_id = vmss['properties']['virtualMachineProfile']['networkProfile']['networkInterfaceConfigurations'][0]['properties']['ipConfigurations'][0]['properties']['loadBalancerBackendAddressPools'][0]['id']
-            subnet_name = re.sub('.*subnets\\/', '', subnet_id)
-            load_balancer_name =  re.sub('\\/backendAddressPools.*', '', re.sub('.*loadBalancers\\/', '', backend_address_pool_id))
-            virtual_network_name = re.sub('.*virtualNetworks\\/', '', re.sub('\\/subnets.*', '', subnet_id))
-
-            results[0] = {}
-            results[0]['resource_group'] = self.resource_group
-            results[0]['name'] = vmss['name']
-            results[0]['state'] = 'present'
-            results[0]['location'] = vmss['location']
-            results[0]['vm_size'] = vmss['sku']['name'] 
-            results[0]['capacity'] = vmss['sku']['capacity']
-            results[0]['tier'] = vmss['sku']['tier']
-            results[0]['upgrade_policy'] = vmss['properties']['upgradePolicy']['mode']
-            #results[0]['admin_username']
-            #results[0]['admin_password']
-            #results[0]['ssh_password_enabled']
-            #results[0]['ssh_public_keys']
-            # image could be a dict, string, 
-            results[0]['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
-
-            results[0]['os_disk_caching'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
-            results[0]['os_type'] = 'Linux' #vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
-            results[0]['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
-            results[0]['data_disks'] = []
-            results[0]['virtual_network_name'] = virtual_network_name
-            results[0]['subnet_name'] = subnet_name
-            results[0]['load_balancer'] = load_balancer_name
-            #results[0]['remove_on_absent']
 
         return results
 
