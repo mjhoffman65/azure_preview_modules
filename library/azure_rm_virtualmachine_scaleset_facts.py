@@ -233,10 +233,10 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             results[0]['name'] = vmss['name']
             results[0]['state'] = 'present'
             results[0]['location'] = vmss['location']
-            #results[0]['vm_size'] = 
-            #results[0]['capacity']
-            #results[0]['tier']
-            #results[0]['upgrade_policy']
+            results[0]['vm_size'] = vmss['sku']['name'] 
+            results[0]['capacity'] = vmss['sku']['capacity']
+            results[0]['tier'] = vmss['sku']['tier']
+            results[0]['upgrade_policy'] = vmss['properties']['upgradePolicy']['mode']
             #results[0]['admin_username']
             #results[0]['admin_password']
             #results[0]['ssh_password_enabled']
@@ -244,9 +244,9 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             # image could be a dict, string, 
             results[0]['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
 
-            #results[0]['os_disk_caching']
-            #results[0]['os_type']
-            #results[0]['managed_disk_type']
+            results[0]['os_disk_caching'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
+            results[0]['os_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
+            results[0]['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
             #results[0]['data_disks']
             #results[0]['virtual_network_name']
             #results[0]['subnet_name']
