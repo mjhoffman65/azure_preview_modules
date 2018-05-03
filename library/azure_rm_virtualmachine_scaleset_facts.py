@@ -242,7 +242,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             #results[0]['ssh_password_enabled']
             #results[0]['ssh_public_keys']
             # image could be a dict, string, 
-            results[0]['image'] = vmss['virtualMachineProfile']['storageProfile']['imageReference']
+            results[0]['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
 
             #results[0]['os_disk_caching']
             #results[0]['os_type']
