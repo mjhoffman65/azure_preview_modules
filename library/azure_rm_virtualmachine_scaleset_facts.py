@@ -225,7 +225,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             results = [self.serialize_obj(item, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)]
 
         if self.format == 'full':
-            results[0]['resource_group'] = item.resource_group
+            results[0]['resource_group'] = self.resource_group
             results[0]['name'] = item.name
             results[0]['state'] = 'present'
             results[0]['location'] = item.location
