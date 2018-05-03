@@ -254,7 +254,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
             results[0]['os_disk_caching'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
             results[0]['os_type'] = 'Linux' #vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
             results[0]['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
-            #results[0]['data_disks']
+            results[0]['data_disks'] = []
             results[0]['virtual_network_name'] = virtual_network_name
             results[0]['subnet_name'] = subnet_name
             results[0]['load_balancer'] = load_balancer_name
