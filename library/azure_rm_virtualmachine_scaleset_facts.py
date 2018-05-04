@@ -225,9 +225,9 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
                 updated['capacity'] = vmss['sku']['capacity']
                 updated['tier'] = vmss['sku']['tier']
                 updated['upgrade_policy'] = vmss['properties']['upgradePolicy']['mode']
-                #updated['admin_username']
+                updated['admin_username'] = vmss['properties']['virtualMachineProfile']['osProfile']['adminUsername']
                 #updated['admin_password']
-                #updated['ssh_password_enabled']
+                updated['ssh_password_enabled'] = not vmss['properties']['virtualMachineProfile']['osProfile']['linuxConfiguration']['disablePasswordAuthentication']
                 #updated['ssh_public_keys']
                 # image could be a dict, string, 
                 updated['image'] = vmss['properties']['virtualMachineProfile']['storageProfile']['imageReference']
