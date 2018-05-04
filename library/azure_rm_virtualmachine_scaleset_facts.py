@@ -238,7 +238,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
 
                 data_disks = vmss['properties']['virtualMachineProfile']['storageProfile'].get('dataDisks', [])
                 
-                for index in range(len(dataDisks)):
+                for index in range(len(data_disks)):
                     old_disk = data_disks[index]
                     new_disk = {}
                     new_disk['lun'] = old_disk['lun']
