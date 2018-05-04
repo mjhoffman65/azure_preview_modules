@@ -247,7 +247,7 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
                     new_disk['caching'] = old_disk['caching']
                     data_disks[disk_index] = new_disk
 
-                updated['data_disks'] = []
+                updated['data_disks'] = data_disks
                 updated['virtual_network_name'] = virtual_network_name
                 updated['subnet_name'] = subnet_name
                 updated['load_balancer'] = load_balancer_name
