@@ -235,6 +235,18 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
                 updated['os_disk_caching'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
                 updated['os_type'] = 'Linux' #vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['caching']
                 updated['managed_disk_type'] = vmss['properties']['virtualMachineProfile']['storageProfile']['osDisk']['managedDisk']['storageAccountType']
+
+                data_disks = vmss['properties']['virtualMachineProfile']['storageProfile'].get('dataDisks', [])
+                
+                for index in range(len(dataDisks)):
+                    old_disk = data_disks[index]
+                    new_disk = {}
+                    new_disk['lun'] = old_disk['lun']
+                    new_disk['disk_size_gb'] = old_disk['diskSizeGB']
+                    new_disk['managed_disk_type'] = old_disk['managedDisk']['storageAccountType']
+                    new_disk['caching'] = old_disk['caching']
+                    data_disks[index] = 
+
                 updated['data_disks'] = []
                 updated['virtual_network_name'] = virtual_network_name
                 updated['subnet_name'] = subnet_name
