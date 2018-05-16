@@ -781,7 +781,7 @@ def snake_to_camel(snake, capitalize_first=False):
         return snake.split('_')[0] + ''.join(x.capitalize() or '_' for x in snake.split('_')[1:])
 
 
-def compare_arrays(old_params, new_params, param_name):
+def compare_arrays(new_params, old_params, param_name):
 
     old = old_params.get(param_name)
     new = new_params.get(param_name)
