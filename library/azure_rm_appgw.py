@@ -805,9 +805,9 @@ def compare_arrays(old_params, new_params, param_name):
 
         DUMP['oldd'] = oldd
         DUMP['newd'] = newd
-        DUMP['compare'] = (newdd == oldd)
+        DUMP['compare'] = (newd == oldd)
 
-        return  newdd == oldd
+        return  newd == oldd
 
     return (old is None and new is None)
 
