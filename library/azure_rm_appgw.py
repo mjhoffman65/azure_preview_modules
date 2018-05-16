@@ -351,6 +351,8 @@ except ImportError:
 class Actions:
     NoAction, Create, Update, Delete = range(4)
 
+newd = None
+oldd = None
 
 class AzureRMApplicationGateways(AzureRMModuleBase):
     """Configuration class for an Azure RM Application Gateway resource"""
@@ -615,20 +617,20 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 self.to_do = Actions.NoAction
 
 
-            new = self.parameters.get('backend_http_settings_collection')
-            old = old_response.get('backend_http_settings_collection')
+            #new = self.parameters.get('backend_http_settings_collection')
+            #old = old_response.get('backend_http_settings_collection')
 
-            oldd = {}
-            for item in old:
-                name = item['name']
-                oldd[name] = item
-            newd = {}
-            for item in new:
-                name = item['name']
-                newd[name] = item
+            #oldd = {}
+            #for item in old:
+            #    name = item['name']
+            #    oldd[name] = item
+            #newd = {}
+            #for item in new:
+            #    name = item['name']
+            #    newd[name] = item
 
             self.results['old'] = oldd
-            self.results['new'] = dict_merge(oldd, newd)
+            self.results['new'] = newd
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
@@ -797,7 +799,9 @@ def compare_arrays(old_params, new_params, param_name):
             name = item['name']
             newd[name] = item
 
-        return dict_merge(oldd, newd) == oldd
+        newdd = dict_merge(oldd, newd)
+
+        return  newdd == oldd
 
     return (old is None and new is None)
 
