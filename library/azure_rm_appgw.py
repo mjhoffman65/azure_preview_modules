@@ -603,15 +603,15 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     # self.parameters['ssl_policy']['policy_type'] != old_response['ssl_policy']['policy_type'] or
                     # self.parameters['ssl_policy']['policy_name'] != old_response['ssl_policy']['policy_name'] or
                     # self.parameters['ssl_policy']['min_protocol_version'] != old_response['ssl_policy']['min_protocol_version'] or
-                    not compare_arrays(self.parameters, old_response, 'authentication_certificates') or
-                    not compare_arrays(self.parameters, old_response, 'gateway_ip_configurations') or
-                    not compare_arrays(self.parameters, old_response, 'ssl_certificates') or
-                    not compare_arrays(self.parameters, old_response, 'frontend_ip_configurations') or
+                    not compare_arrays(old_response, self.parameters, 'authentication_certificates') or
+                    not compare_arrays(old_response, self.parameters, 'gateway_ip_configurations') or
+                    not compare_arrays(old_response, self.parameters, 'ssl_certificates') or
+                    not compare_arrays(old_response, self.parameters, 'frontend_ip_configurations') or
                     not compare_arrays(old_response, self.parameters, 'frontend_ports') or
                     not compare_arrays(old_response, self.parameters, 'backend_address_pools') or
                     not compare_arrays(old_response, self.parameters, 'backend_http_settings_collection') or
-                    not compare_arrays(self.parameters, old_response, 'request_routing_rules') or
-                    not compare_arrays(self.parameters, old_response, 'http_listeners')):
+                    not compare_arrays(old_response, self.parameters, 'request_routing_rules') or
+                    not compare_arrays(old_response, self.parameters, 'http_listeners')):
 
                 self.to_do = Actions.Update
             else:
