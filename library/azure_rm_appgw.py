@@ -786,6 +786,7 @@ def snake_to_camel(snake, capitalize_first=False):
 
 def compare_arrays(old_params, new_params, param_name):
 
+    DUMP['moo'] = 'xxx'
     old = old_params.get(param_name)
     new = new_params.get(param_name)
 
