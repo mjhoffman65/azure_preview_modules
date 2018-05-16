@@ -351,6 +351,7 @@ except ImportError:
 class Actions:
     NoAction, Create, Update, Delete = range(4)
 
+DUMP = { 'new': None, 'old': None }
 newd = None
 oldd = None
 
@@ -629,8 +630,9 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
             #    name = item['name']
             #    newd[name] = item
 
-            self.results['old'] = oldd
-            self.results['new'] = newd
+            #self.results['old'] = oldd
+            #self.results['new'] = newd
+            self.results['dump'] = DUMP
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
@@ -800,6 +802,10 @@ def compare_arrays(old_params, new_params, param_name):
             newd[name] = item
 
         newdd = dict_merge(oldd, newd)
+
+        DUMP['oldd'] = oldd
+        DUMP['newd'] = newd
+        DUMP['compare'] = (newdd == oldd)
 
         return  newdd == oldd
 
