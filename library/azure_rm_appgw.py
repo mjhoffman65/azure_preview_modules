@@ -805,12 +805,15 @@ def compare_arrays(old_params, new_params, param_name):
 
         newd = dict_merge(oldd, newd)
 
-        if newd != oldd:
+        if not (newd == oldd):
             DUMP['oldd'] = oldd
             DUMP['newd'] = newd
             DUMP['compare'] = (newd == oldd)
 
         return  newd == oldd
+
+    if not (old is None and new is None):
+        DUMP['moo'] = 'MISSING DICT'
 
     return (old is None and new is None)
 
