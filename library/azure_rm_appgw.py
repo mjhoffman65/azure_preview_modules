@@ -613,6 +613,22 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
             else:
                 self.to_do = Actions.NoAction
 
+
+            old = self.parameters.get('backend_http_settings_collections')
+            new = old_response.get('backend_http_settings_collections')
+
+            oldd = {}
+            for item in old:
+                name = item['name']
+                oldd[name] = item
+            newd = {}
+            for item in new:
+                name = item['name']
+                newd[name] = item
+
+            self.results['old'] = oldd
+            self.results['new'] = newd
+
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
 
