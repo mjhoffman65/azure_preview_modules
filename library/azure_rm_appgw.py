@@ -351,9 +351,7 @@ except ImportError:
 class Actions:
     NoAction, Create, Update, Delete = range(4)
 
-DUMP = { 'new': None, 'old': None }
-newd = None
-oldd = None
+DUMP = { 'newd': None, 'oldd': None, 'compare': None }
 
 class AzureRMApplicationGateways(AzureRMModuleBase):
     """Configuration class for an Azure RM Application Gateway resource"""
