@@ -606,7 +606,7 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     # not compare_arrays(self.parameters, old_response, 'frontend_ip_configurations') or
                     #(not compare_arrays(self.parameters, old_response, 'frontend_ports')) or
                     # not compare_arrays(self.parameters, old_response, 'backend_address_pools') or
-                    not compare_arrays(self.parameters, old_response, 'backend_http_settings_collections')): # or
+                    not compare_arrays(old_response, self.parameters, 'backend_http_settings_collections')): # or
                     # not compare_arrays(self.parameters, old_response, 'request_routing_rules')):
                     #(not compare_arrays(self.parameters, old_response, 'http_listeners'))):
 
@@ -782,7 +782,7 @@ def snake_to_camel(snake, capitalize_first=False):
         return snake.split('_')[0] + ''.join(x.capitalize() or '_' for x in snake.split('_')[1:])
 
 
-def compare_arrays(new_params, old_params, param_name):
+def compare_arrays(old_params, new_params, param_name):
 
     old = old_params.get(param_name)
     new = new_params.get(param_name)
@@ -797,7 +797,7 @@ def compare_arrays(new_params, old_params, param_name):
             name = item['name']
             newd[name] = item
 
-        return dict_merge(newd, oldd) == oldd
+        return dict_merge(oldd, newd) == oldd
 
     return (old is None and new is None)
 
