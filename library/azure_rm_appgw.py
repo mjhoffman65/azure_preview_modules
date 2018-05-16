@@ -813,7 +813,7 @@ def compare_arrays(old_params, new_params, param_name):
         return  newd == oldd
 
     if not (old is None and new is None):
-        DUMP['moo'] = 'MISSING DICT'
+        DUMP['moo'] = param_name
 
     return (old is None and new is None)
 
