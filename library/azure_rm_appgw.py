@@ -805,9 +805,10 @@ def compare_arrays(old_params, new_params, param_name):
 
         newd = dict_merge(oldd, newd)
 
-        DUMP['oldd'] = oldd
-        DUMP['newd'] = newd
-        DUMP['compare'] = (newd == oldd)
+        if newd != oldd:
+            DUMP['oldd'] = oldd
+            DUMP['newd'] = newd
+            DUMP['compare'] = (newd == oldd)
 
         return  newd == oldd
 
