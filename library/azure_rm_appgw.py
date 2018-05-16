@@ -336,6 +336,7 @@ id:
 
 import time
 from ansible.module_utils.azure_rm_common import AzureRMModuleBase
+from copy import deepcopy
 
 try:
     from msrestazure.azure_exceptions import CloudError
@@ -627,7 +628,7 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 newd[name] = item
 
             self.results['old'] = oldd
-            self.results['new'] = dict(oldd, **newd)
+            self.results['new'] = dict_merge(oldd, newd)
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
@@ -796,10 +797,23 @@ def compare_arrays(new_params, old_params, param_name):
             name = item['name']
             newd[name] = item
 
-        return dict(newd, **oldd) == oldd
+        return dict_merge(newd, oldd) == oldd
 
     return (old is None and new is None)
 
+def dict_merge(a, b):
+    '''recursively merges dict's. not just simple a['key'] = b['key'], if
+    both a and bhave a key who's value is a dict then dict_merge is called
+    on both values and the result stored in the returned dictionary.'''
+    if not isinstance(b, dict):
+        return b
+    result = deepcopy(a)
+    for k, v in b.iteritems():
+        if k in result and isinstance(result[k], dict):
+                result[k] = dict_merge(result[k], v)
+        else:
+            result[k] = deepcopy(v)
+    return result
 
 def main():
     """Main execution"""
