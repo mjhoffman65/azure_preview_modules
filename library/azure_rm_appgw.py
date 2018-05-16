@@ -796,7 +796,7 @@ def compare_arrays(new_params, old_params, param_name):
             name = item['name']
             newd[name] = item
 
-        return dict(oldd, **newd) == oldd
+        return dict(newd, **oldd) == oldd
 
     return (old is None and new is None)
 
