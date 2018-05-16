@@ -814,6 +814,8 @@ def compare_arrays(old_params, new_params, param_name):
 
     if not (old is None and new is None):
         DUMP['moo'] = param_name
+        DUMP['old'] = old
+        DUMP['new'] = new
 
     return (old is None and new is None)
 
