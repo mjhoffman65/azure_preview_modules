@@ -626,8 +626,8 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 name = item['name']
                 newd[name] = item
 
-            self.results['old'] = dict(oldd, **newd)
-            self.results['new'] = newd
+            self.results['old'] = oldd
+            self.results['new'] = dict(oldd, **newd)
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
