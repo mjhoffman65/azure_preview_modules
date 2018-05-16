@@ -790,34 +790,27 @@ def compare_arrays(old_params, new_params, param_name):
 
     DUMP['moo'] = 'xxx'
 
-    old = old_params.get(param_name)
-    new = new_params.get(param_name)
+    old = old_params.get(param_name) or []
+    new = new_params.get(param_name) or []
 
-    if not (old is None or new is None):
-        oldd = {}
-        for item in old:
-            name = item['name']
-            oldd[name] = item
-        newd = {}
-        for item in new:
-            name = item['name']
-            newd[name] = item
+    oldd = {}
+    for item in old:
+        name = item['name']
+        oldd[name] = item
+    newd = {}
+    for item in new:
+        name = item['name']
+        newd[name] = item
 
-        newd = dict_merge(oldd, newd)
+    newd = dict_merge(oldd, newd)
 
-        if not (newd == oldd):
-            DUMP['oldd'] = oldd
-            DUMP['newd'] = newd
-            DUMP['compare'] = (newd == oldd)
+    if not (newd == oldd):
+        DUMP['oldd'] = oldd
+        DUMP['newd'] = newd
+        DUMP['compare'] = (newd == oldd)
 
-        return  newd == oldd
+    return  newd == oldd
 
-    if not (old is None and new is None):
-        DUMP['moo'] = param_name
-        DUMP['old'] = old
-        DUMP['new'] = new
-
-    return (old is None and new is None)
 
 def dict_merge(a, b):
     '''recursively merges dict's. not just simple a['key'] = b['key'], if
