@@ -614,8 +614,8 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 self.to_do = Actions.NoAction
 
 
-            old = self.parameters.get('backend_http_settings_collections')
-            new = old_response.get('backend_http_settings_collections')
+            old = self.parameters.get('backend_http_settings_collection')
+            new = old_response.get('backend_http_settings_collection')
 
             oldd = {}
             for item in old:
