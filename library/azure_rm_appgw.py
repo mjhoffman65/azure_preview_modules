@@ -801,7 +801,7 @@ def compare_arrays(old_params, new_params, param_name):
             name = item['name']
             newd[name] = item
 
-        newdd = dict_merge(oldd, newd)
+        newd = dict_merge(oldd, newd)
 
         DUMP['oldd'] = oldd
         DUMP['newd'] = newd
