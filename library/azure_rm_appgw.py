@@ -494,16 +494,18 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     self.parameters["backend_address_pools"] = kwargs[key]
                 elif key == "backend_http_settings_collection":
                     ev = kwargs[key]
-                    if 'protocol' in ev:
-                        if ev['protocol'] == 'http':
-                            ev['protocol'] = 'Http'
-                        elif ev['protocol'] == 'https':
-                            ev['protocol'] = 'Https'
-                    if 'cookie_based_affinity' in ev:
-                        if ev['cookie_based_affinity'] == 'enabled':
-                            ev['cookie_based_affinity'] = 'Enabled'
-                        elif ev['cookie_based_affinity'] == 'disabled':
-                            ev['cookie_based_affinity'] = 'Disabled'
+                    for i in range(len(ev)):
+                        item = ev[i]
+                        if 'protocol' in item:
+                            if item['protocol'] == 'http':
+                                item['protocol'] = 'Http'
+                            elif item['protocol'] == 'https':
+                                item['protocol'] = 'Https'
+                        if 'cookie_based_affinity' in item:
+                            if item['cookie_based_affinity'] == 'enabled':
+                                item['cookie_based_affinity'] = 'Enabled'
+                            elif item['cookie_based_affinity'] == 'disabled':
+                                item['cookie_based_affinity'] = 'Disabled'
                     self.parameters["backend_http_settings_collection"] = ev
                 elif key == "http_listeners":
                     ev = kwargs[key]
