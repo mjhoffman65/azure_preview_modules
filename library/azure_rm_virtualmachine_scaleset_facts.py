@@ -251,7 +251,6 @@ class AzureRMVirtualMachineScaleSetFacts(AzureRMModuleBase):
                 updated['virtual_network_name'] = virtual_network_name
                 updated['subnet_name'] = subnet_name
                 updated['load_balancer'] = load_balancer_name
-                #updated['remove_on_absent']
 
                 self.results['ansible_facts']['azure_vmss'][index] = updated
 
