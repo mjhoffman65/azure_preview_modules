@@ -772,7 +772,7 @@ def compare_arrays(old_params, new_params, param_name):
         oldd[name] = item
     newd = {}
     for item in new:
-        name = item['name']
+        name = item.get('name', 'xxxx')
         newd[name] = item
 
     newd = dict_merge(oldd, newd)
