@@ -598,6 +598,8 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 self.log("Need to check if Application Gateway instance has to be deleted or may be updated")
                 self.to_do = Actions.Update
 
+        self.results.dump = { 'new': self.parameters, 'old': old_response }
+
         if (self.to_do == Actions.Update):
             if (self.parameters['location'] != old_response['location'] or
                     self.parameters['sku']['name'] != old_response['sku']['name'] or
