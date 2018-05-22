@@ -485,11 +485,10 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     self.parameters["ssl_certificates"] = kwargs[key]
                 elif key == "frontend_ip_configurations":
                     ev = kwargs[key]
-                    if 'private_ip_allocation_method' in ev:
-                        if ev['private_ip_allocation_method'] == 'static':
-                            ev['private_ip_allocation_method'] = 'Static'
-                        elif ev['private_ip_allocation_method'] == 'dynamic':
-                            ev['private_ip_allocation_method'] = 'Dynamic'
+                    for i in range(len(ev)):
+                        item = ev[i]
+                        if 'private_ip_allocation_method' in item:
+                            item['private_ip_allocation_method'] = _snake_to_camel(item['private_ip_allocation_method'], True)
                     self.parameters["frontend_ip_configurations"] = ev
                 elif key == "frontend_ports":
                     self.parameters["frontend_ports"] = kwargs[key]
@@ -500,15 +499,9 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     for i in range(len(ev)):
                         item = ev[i]
                         if 'protocol' in item:
-                            if item['protocol'] == 'http':
-                                item['protocol'] = 'Http'
-                            elif item['protocol'] == 'https':
-                                item['protocol'] = 'Https'
+                            item['protocol'] = _snake_to_camel(item['protocol'], True)
                         if 'cookie_based_affinity' in item:
-                            if item['cookie_based_affinity'] == 'enabled':
-                                item['cookie_based_affinity'] = 'Enabled'
-                            elif item['cookie_based_affinity'] == 'disabled':
-                                item['cookie_based_affinity'] = 'Disabled'
+                            item['cookie_based_affinity'] = _snake_to_camel(item['cookie_based_affinity'], True)
                     self.parameters["backend_http_settings_collection"] = ev
                 elif key == "http_listeners":
                     ev = kwargs[key]
@@ -528,10 +521,7 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                                                   item['frontend_port'])
                             item['frontend_port'] = {'id': id}
                         if 'protocol' in item:
-                            if item['protocol'] == 'http':
-                                item['protocol'] = 'Http'
-                            elif item['protocol'] == 'https':
-                                item['protocol'] = 'Https'
+                            item['protocol'] = _snake_to_camel(item['protocol'], True)
                         ev[i] = item
                     self.parameters["http_listeners"] = ev
                 elif key == "request_routing_rules":
@@ -557,15 +547,9 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                                                   item['http_listener'])
                             item['http_listener'] = {'id': id}
                         if 'protocol' in item:
-                            if item['protocol'] == 'http':
-                                item['protocol'] = 'Http'
-                            elif item['protocol'] == 'https':
-                                item['protocol'] = 'Https'
+                            item['protocol'] = _snake_to_camel(item['protocol'], True)
                         if 'rule_type' in ev:
-                            if item['rule_type'] == 'basic':
-                                item['rule_type'] = 'Basic'
-                            elif item['rule_type'] == 'path_based_routing':
-                                item['rule_type'] = 'PathBasedRouting'
+                            item['rule_type'] = _snake_to_camel(item['rule_type'], True)
                         ev[i] = item
                     self.parameters["request_routing_rules"] = ev
                 elif key == "etag":
