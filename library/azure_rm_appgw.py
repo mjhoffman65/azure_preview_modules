@@ -458,17 +458,9 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 elif key == "ssl_policy":
                     ev = kwargs[key]
                     if 'policy_type' in ev:
-                        if ev['policy_type'] == 'predefined':
-                            ev['policy_type'] = 'Predefined'
-                        elif ev['policy_type'] == 'custom':
-                            ev['policy_type'] = 'Custom'
+                        ev['policy_type'] = _snake_to_camel(ev['policy_type'], True)
                     if 'policy_name' in ev:
-                        if ev['policy_name'] == 'app_gw_ssl_policy20150501':
-                            ev['policy_name'] = 'AppGwSslPolicy20150501'
-                        elif ev['policy_name'] == 'app_gw_ssl_policy20170401':
-                            ev['policy_name'] = 'AppGwSslPolicy20170401'
-                        elif ev['policy_name'] == 'app_gw_ssl_policy20170401_s':
-                            ev['policy_name'] = 'AppGwSslPolicy20170401S'
+                        ev['policy_name'] = _snake_to_camel(ev['policy_name'], True)
                     if 'min_protocol_version' in ev:
                         if ev['min_protocol_version'] == 'tl_sv1_0':
                             ev['min_protocol_version'] = 'TLSv1_0'
@@ -758,7 +750,7 @@ def compare_arrays(old_params, new_params, param_name):
         oldd[name] = item
     newd = {}
     for item in new:
-        name = item.get('name', 'xxxx')
+        name = item['name']
         newd[name] = item
 
     newd = dict_merge(oldd, newd)
