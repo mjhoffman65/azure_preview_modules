@@ -337,6 +337,10 @@ id:
 import time
 from ansible.module_utils.azure_rm_common import AzureRMModuleBase
 from copy import deepcopy
+from ansible.module_utils.common.dict_transformations import (
+    camel_dict_to_snake_dict, snake_dict_to_camel_dict,
+    _camel_to_snake, _snake_to_camel,
+)
 
 try:
     from msrestazure.azure_exceptions import CloudError
@@ -351,7 +355,6 @@ except ImportError:
 class Actions:
     NoAction, Create, Update, Delete = range(4)
 
-DUMP = { 'newd': None, 'oldd': None, 'compare': None }
 
 class AzureRMApplicationGateways(AzureRMModuleBase):
     """Configuration class for an Azure RM Application Gateway resource"""
@@ -600,9 +603,6 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                     self.parameters['sku']['name'] != old_response['sku']['name'] or
                     self.parameters['sku']['tier'] != old_response['sku']['tier'] or
                     self.parameters['sku']['capacity'] != old_response['sku']['capacity'] or
-                    # self.parameters['ssl_policy']['policy_type'] != old_response['ssl_policy']['policy_type'] or
-                    # self.parameters['ssl_policy']['policy_name'] != old_response['ssl_policy']['policy_name'] or
-                    # self.parameters['ssl_policy']['min_protocol_version'] != old_response['ssl_policy']['min_protocol_version'] or
                     not compare_arrays(old_response, self.parameters, 'authentication_certificates') or
                     not compare_arrays(old_response, self.parameters, 'gateway_ip_configurations') or
                     not compare_arrays(old_response, self.parameters, 'ssl_certificates') or
@@ -616,23 +616,6 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 self.to_do = Actions.Update
             else:
                 self.to_do = Actions.NoAction
-
-
-            #new = self.parameters.get('backend_http_settings_collection')
-            #old = old_response.get('backend_http_settings_collection')
-
-            #oldd = {}
-            #for item in old:
-            #    name = item['name']
-            #    oldd[name] = item
-            #newd = {}
-            #for item in new:
-            #    name = item['name']
-            #    newd[name] = item
-
-            #self.results['old'] = oldd
-            #self.results['new'] = newd
-            self.results['dump'] = DUMP
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
             self.log("Need to Create / Update the Application Gateway instance")
@@ -779,17 +762,7 @@ def http_listener_id(subscription_id, resource_group_name, appgw_name, name):
     )
 
 
-def snake_to_camel(snake, capitalize_first=False):
-    if capitalize_first:
-        return ''.join(x.capitalize() or '_' for x in snake.split('_'))
-    else:
-        return snake.split('_')[0] + ''.join(x.capitalize() or '_' for x in snake.split('_')[1:])
-
-
 def compare_arrays(old_params, new_params, param_name):
-
-    DUMP['moo'] = 'xxx'
-
     old = old_params.get(param_name) or []
     new = new_params.get(param_name) or []
 
@@ -803,13 +776,7 @@ def compare_arrays(old_params, new_params, param_name):
         newd[name] = item
 
     newd = dict_merge(oldd, newd)
-
-    if not (newd == oldd):
-        DUMP['oldd'] = oldd
-        DUMP['newd'] = newd
-        DUMP['compare'] = (newd == oldd)
-
-    return  newd == oldd
+    return newd == oldd
 
 
 def dict_merge(a, b):
@@ -819,12 +786,13 @@ def dict_merge(a, b):
     if not isinstance(b, dict):
         return b
     result = deepcopy(a)
-    for k, v in b.iteritems():
+    for k, v in b.items():
         if k in result and isinstance(result[k], dict):
                 result[k] = dict_merge(result[k], v)
         else:
             result[k] = deepcopy(v)
     return result
+
 
 def main():
     """Main execution"""
