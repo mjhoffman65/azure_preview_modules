@@ -10,7 +10,7 @@ __metaclass__ = type
 
 ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
-                    'supported_by': 'community'}
+                    'supported_by': 'community'}dump
 
 
 DOCUMENTATION = '''
@@ -598,7 +598,7 @@ class AzureRMApplicationGateways(AzureRMModuleBase):
                 self.log("Need to check if Application Gateway instance has to be deleted or may be updated")
                 self.to_do = Actions.Update
 
-        self.results.dump = { 'new': self.parameters, 'old': old_response }
+        self.results['dump'] = { 'new': self.parameters, 'old': old_response }
 
         if (self.to_do == Actions.Update):
             if (self.parameters['location'] != old_response['location'] or
