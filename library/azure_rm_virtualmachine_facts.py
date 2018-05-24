@@ -408,8 +408,8 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # storage_container_name
             # storage_blob_name
             # managed_disk_type
-            # os_disk_caching
-            # os_type
+            new_result['os_disk_caching'] = result['properties']['storageProfile']['osDisk']['caching']
+            new_result['os_type'] = result['properties']['storageProfile']['osDisk']['osType']
             # data_disks
             # public_ip_allocation_method
             # open_ports
