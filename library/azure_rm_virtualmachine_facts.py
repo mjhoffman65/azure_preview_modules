@@ -284,6 +284,7 @@ except:
 
 from ansible.module_utils.azure_rm_common import AzureRMModuleBase, azure_id_to_dict
 from ansible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
+import re
 
 
 AZURE_OBJECT_CLASS = 'VirtualMachine'
@@ -388,8 +389,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         new_result = {}
         if self.format == 'curated':
             new_result['id'] = vm.id
-
-            # resource_group (must be taken from vm id)
+            new_result['resource_group'] = re.sub('.*resourceGroups\\/', '', result['id'])
             new_result['name'] = vm.name
             # custom_data
             new_result['state'] = 'present'
