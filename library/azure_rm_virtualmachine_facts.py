@@ -397,8 +397,8 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # allocated
             # restarted
             new_result['location'] = vm.location
-            new_result['vm_size'] = result['properties']['osProfile']['vmSize']
-            new_result['admin_username'] = result['properties']['hardwareProfile']['adminUsername'] 
+            new_result['vm_size'] = result['properties']['hardwareProfile']['vmSize']
+            new_result['admin_username'] = result['properties']['osProfile']['adminUsername'] 
             # admin_password
             # ssh_password_enabled
             # ssh_public_keys
