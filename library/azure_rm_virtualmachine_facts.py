@@ -386,10 +386,43 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         result = self.serialize_obj(vm, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
 
         if self.format == 'curated':
+            old = result
             result['id'] = vm.id
+
+            # resource_group (must be taken from vm id)
             result['name'] = vm.name
-            result['type'] = vm.type
+            # custom_data
+            result['state'] = 'present'
+            # started
+            # allocated
+            # restarted
             result['location'] = vm.location
+            result['vm_size'] = old['properties']['osProfile']['adminUsername']
+            result['admin_username'] = old['properties']['hardwareProfile']['vmSize'] 
+            # admin_password
+            # ssh_password_enabled
+            # ssh_public_keys
+            # image
+            # availability_set
+            # storage_account_name
+            # storage_container_name
+            # storage_blob_name
+            # managed_disk_type
+            # os_disk_caching
+            # os_type
+            # data_disks
+            # public_ip_allocation_method
+            # open_ports
+            # network_interface_names
+            # virtual_network_resource_group
+            # virtual_network_name
+            # subnet_name
+            # remove_on_absent
+            # plan
+
+
+            # not needed
+            #result['type'] = vm.type
             result['tags'] = vm.tags
 
             result['powerstate'] = dict()
