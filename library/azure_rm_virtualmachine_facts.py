@@ -389,7 +389,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         new_result = {}
         if self.format == 'curated':
             new_result['id'] = vm.id
-            new_result['resource_group'] = re.sub('.*providers\\/', '', re.sub('.*resourceGroups\\/', '', result['id']))
+            new_result['resource_group'] = re.sub('.*resourceGroups\\/', '', re.sub('.*providers\\/', '', result['id']))
             new_result['name'] = vm.name
             # custom_data
             new_result['state'] = 'present'
