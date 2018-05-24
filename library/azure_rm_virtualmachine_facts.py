@@ -428,7 +428,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             #result['powerstate'] = dict()
             #if vm.instance_view:
             #    result['powerstate'] = next((s.code.replace('PowerState/', '')
-                                            for s in vm.instance_view.statuses if s.code.startswith('PowerState')), None)
+            #                                for s in vm.instance_view.statuses if s.code.startswith('PowerState')), None)
 
             # Expand network interfaces to include config properties
             #for interface in vm.network_profile.network_interfaces:
