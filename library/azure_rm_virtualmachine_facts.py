@@ -385,20 +385,20 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
 
         result = self.serialize_obj(vm, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
 
+        new_result = {}
         if self.format == 'curated':
-            old = result
-            result['id'] = vm.id
+            new_result['id'] = vm.id
 
             # resource_group (must be taken from vm id)
-            result['name'] = vm.name
+            new_result['name'] = vm.name
             # custom_data
-            result['state'] = 'present'
+            new_result['state'] = 'present'
             # started
             # allocated
             # restarted
-            result['location'] = vm.location
-            result['vm_size'] = old['properties']['osProfile']['adminUsername']
-            result['admin_username'] = old['properties']['hardwareProfile']['vmSize'] 
+            new_result['location'] = vm.location
+            new_result['vm_size'] = result['properties']['osProfile']['adminUsername']
+            new_result['admin_username'] = result['properties']['hardwareProfile']['vmSize'] 
             # admin_password
             # ssh_password_enabled
             # ssh_public_keys
@@ -423,7 +423,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
 
             # not needed
             #result['type'] = vm.type
-            result['tags'] = vm.tags
+            new_result['tags'] = vm.tags
 
             #result['powerstate'] = dict()
             #if vm.instance_view:
@@ -458,6 +458,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             #snake_dict = camel_dict_to_snake_dict(result)
             #self.log(snake_dict, pretty_print=True)
             #return snake_dict
+            return new_result
         else:
             return result
 
