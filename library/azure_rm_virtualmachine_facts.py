@@ -25,15 +25,25 @@ description:
   - Get facts for all virtual machines of a resource group.
 
 options:
-  resource_group:
-    description:
-      - Name of the resource group containing the virtual machines (required when filtering by vm name).
-  name:
-    description:
-      - Name of the virtual machine.
-  tags:
-    description:
-      - Limit results by providing a list of tags. Format tags as 'key' or 'key:value'.
+    resource_group:
+        description:
+        - Name of the resource group containing the virtual machines (required when filtering by vm name).
+    name:
+        description:
+        - Name of the virtual machine.
+    tags:
+        description:
+        - Limit results by providing a list of tags. Format tags as 'key' or 'key:value'.
+    format:
+        description:
+            - Format of the data returned.
+            - If C(raw) is selected information will be returned in raw format from Azure Python SDK.
+            - If C(curated) is selected the structure will be identical to input parameters of azure_rm_virtualmachine_scaleset module.
+            - In Ansible 2.5 and lower facts are always returned in raw format.
+        default: 'curated'
+        choices:
+            - 'curated'
+            - 'raw'
 
 extends_documentation_fragment:
   - azure
@@ -288,7 +298,13 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         self.module_arg_spec = dict(
             resource_group=dict(type='str'),
             name=dict(type='str'),
-            tags=dict(type='list')
+            tags=dict(type='list'),
+            format=dict(
+                type='str',
+                choices=['curated',
+                         'raw'],
+                default='curated'
+            )
         )
 
         self.results = dict(
@@ -299,6 +315,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         self.resource_group = None
         self.name = None
         self.tags = None
+        self.format = None
 
         super(AzureRMVirtualMachineFacts, self).__init__(self.module_arg_spec,
                                                          supports_tags=False,
@@ -367,45 +384,49 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
         '''
 
         result = self.serialize_obj(vm, AZURE_OBJECT_CLASS, enum_modules=AZURE_ENUM_MODULES)
-        result['id'] = vm.id
-        result['name'] = vm.name
-        result['type'] = vm.type
-        result['location'] = vm.location
-        result['tags'] = vm.tags
 
-        result['powerstate'] = dict()
-        if vm.instance_view:
-            result['powerstate'] = next((s.code.replace('PowerState/', '')
-                                         for s in vm.instance_view.statuses if s.code.startswith('PowerState')), None)
+        if self.format == 'curated':
+            result['id'] = vm.id
+            result['name'] = vm.name
+            result['type'] = vm.type
+            result['location'] = vm.location
+            result['tags'] = vm.tags
 
-        # Expand network interfaces to include config properties
-        for interface in vm.network_profile.network_interfaces:
-            int_dict = azure_id_to_dict(interface.id)
-            nic = self.get_network_interface(int_dict['networkInterfaces'])
-            for interface_dict in result['properties']['networkProfile']['networkInterfaces']:
-                if interface_dict['id'] == interface.id:
-                    nic_dict = self.serialize_obj(nic, 'NetworkInterface')
-                    interface_dict['name'] = int_dict['networkInterfaces']
-                    interface_dict['properties'] = nic_dict['properties']
+            result['powerstate'] = dict()
+            if vm.instance_view:
+                result['powerstate'] = next((s.code.replace('PowerState/', '')
+                                            for s in vm.instance_view.statuses if s.code.startswith('PowerState')), None)
 
-        # Expand public IPs to include config properties
-        for interface in result['properties']['networkProfile']['networkInterfaces']:
-            for config in interface['properties']['ipConfigurations']:
-                if config['properties'].get('publicIPAddress'):
-                    pipid_dict = azure_id_to_dict(config['properties']['publicIPAddress']['id'])
-                    try:
-                        pip = self.network_client.public_ip_addresses.get(self.resource_group,
-                                                                          pipid_dict['publicIPAddresses'])
-                    except Exception as exc:
-                        self.fail("Error fetching public ip {0} - {1}".format(pipid_dict['publicIPAddresses'],
-                                                                              str(exc)))
-                    pip_dict = self.serialize_obj(pip, 'PublicIPAddress')
-                    config['properties']['publicIPAddress']['name'] = pipid_dict['publicIPAddresses']
-                    config['properties']['publicIPAddress']['properties'] = pip_dict['properties']
+            # Expand network interfaces to include config properties
+            for interface in vm.network_profile.network_interfaces:
+                int_dict = azure_id_to_dict(interface.id)
+                nic = self.get_network_interface(int_dict['networkInterfaces'])
+                for interface_dict in result['properties']['networkProfile']['networkInterfaces']:
+                    if interface_dict['id'] == interface.id:
+                        nic_dict = self.serialize_obj(nic, 'NetworkInterface')
+                        interface_dict['name'] = int_dict['networkInterfaces']
+                        interface_dict['properties'] = nic_dict['properties']
 
-        snake_dict = camel_dict_to_snake_dict(result)
-        self.log(snake_dict, pretty_print=True)
-        return snake_dict
+            # Expand public IPs to include config properties
+            for interface in result['properties']['networkProfile']['networkInterfaces']:
+                for config in interface['properties']['ipConfigurations']:
+                    if config['properties'].get('publicIPAddress'):
+                        pipid_dict = azure_id_to_dict(config['properties']['publicIPAddress']['id'])
+                        try:
+                            pip = self.network_client.public_ip_addresses.get(self.resource_group,
+                                                                            pipid_dict['publicIPAddresses'])
+                        except Exception as exc:
+                            self.fail("Error fetching public ip {0} - {1}".format(pipid_dict['publicIPAddresses'],
+                                                                                str(exc)))
+                        pip_dict = self.serialize_obj(pip, 'PublicIPAddress')
+                        config['properties']['publicIPAddress']['name'] = pipid_dict['publicIPAddresses']
+                        config['properties']['publicIPAddress']['properties'] = pip_dict['properties']
+
+            snake_dict = camel_dict_to_snake_dict(result)
+            self.log(snake_dict, pretty_print=True)
+            return snake_dict
+        else:
+            return result
 
     def get_network_interface(self, name):
         try:
