@@ -399,7 +399,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             new_result['location'] = vm.location
             new_result['vm_size'] = result['properties']['hardwareProfile']['vmSize']
             new_result['admin_username'] = result['properties']['osProfile']['adminUsername'] 
-            # admin_password
+            # admin_password (probably not available)
             # ssh_password_enabled
             # ssh_public_keys
             # image
@@ -414,6 +414,11 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # public_ip_allocation_method
             # open_ports
             # network_interface_names
+            new_result['network_interface_names'] = []
+            nics = result['properties']['networkProfile']['networkInterfaces']
+            for nic_index in range(len(nics)):
+                new_result['network_interface_names'].append(nics[nic_index])
+            
             # virtual_network_resource_group
             # virtual_network_name
             # subnet_name
