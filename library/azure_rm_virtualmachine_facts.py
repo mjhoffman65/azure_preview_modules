@@ -411,9 +411,21 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             new_result['os_disk_caching'] = result['properties']['storageProfile']['osDisk']['caching']
             new_result['os_type'] = result['properties']['storageProfile']['osDisk']['osType']
             # data_disks
+            new_result['data_disks'] = []
+            disks = result['properties']['storageProfile']['dataDisks'] 
+            for disk_index in range(len(disks)):
+                new_result['data_disks'].append({
+                    'lun': disks[disk_index]['lun'],
+                    'disk_size_gb': disks[disk_index]['diskSizeGB'],
+                    'managed_disk_type': disks[disk_index]['managedDisk']['storageAccountType'],
+                    'storage_account_name': 'xxx',
+                    'storage_container_name': 'xxx',
+                    'storage_blob_name': 'xxx',
+                    'caching': disks[disk_index]['caching']
+                })
+
             # public_ip_allocation_method
             # open_ports
-            # network_interface_names
             new_result['network_interface_names'] = []
             nics = result['properties']['networkProfile']['networkInterfaces']
             for nic_index in range(len(nics)):
