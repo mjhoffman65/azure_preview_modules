@@ -417,7 +417,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             new_result['network_interface_names'] = []
             nics = result['properties']['networkProfile']['networkInterfaces']
             for nic_index in range(len(nics)):
-                new_result['network_interface_names'].append(re.sub('.*networkInterfaces\\/', '', nics[nic_index]))
+                new_result['network_interface_names'].append(re.sub('/([^/]+$)/g', '', nics[nic_index]))
             
             # virtual_network_resource_group
             # virtual_network_name
