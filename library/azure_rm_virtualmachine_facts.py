@@ -392,7 +392,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             new_result['id'] = vm.id
             new_result['resource_group'] = re.sub('\\/.*', '', re.sub('.*resourceGroups\\/', '', result['id']))
             new_result['name'] = vm.name
-            # custom_data
+            # custom_data -- not available
             new_result['state'] = 'present'
             # started
             # allocated
@@ -403,16 +403,19 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # admin_password (probably not available)
             # ssh_password_enabled
             # ssh_public_keys
-            # image
+            image =  result['properties']['storageProfile'].get('imageReference')
+            if image is not None:
+                new_result['image'] = {
+                    'publisher': image['publisher'],
+                    'sku': image['sku'],
+                    'offer': image['offer'],
+                    'version': image['version']
+                }
             # availability_set
 
             vhd = result['properties']['storageProfile']['osDisk'].get('vhd')
-
             if vhd is not None:
-                # "https://3b860b21860a84468b76aec7.blob.core.windows.net/testvm001/testvm001.vhd"
                 url = urlparse(vhd['uri'])
-                # url.path
-                # url.netloc
                 new_result['storage_account_name'] = url.netloc.split('.')[0]
                 new_result['storage_container_name'] = url.path.split('/')[1]
                 new_result['storage_blob_name'] = url.path.split('/')[-1]
