@@ -284,6 +284,7 @@ except:
 
 from ansible.module_utils.azure_rm_common import AzureRMModuleBase, azure_id_to_dict
 from ansible.module_utils.common.dict_transformations import camel_dict_to_snake_dict
+from ansible.module_utils.six.moves.urllib.parse import urlparse
 import re
 
 
@@ -404,9 +405,19 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # ssh_public_keys
             # image
             # availability_set
-            # storage_account_name
-            # storage_container_name
-            # storage_blob_name
+
+            vhd = result['properties']['osProfile'].get('vhd')
+
+            if vhd is not None:
+                # "https://3b860b21860a84468b76aec7.blob.core.windows.net/testvm001/testvm001.vhd"
+                url = urlparse(vhd['id'])
+                # url.path
+                # url.netloc
+                new_result['storage_account_name'] = vhd[url.netloc]
+                new_result['storage_container_name'] = url.path
+                new_result['storage_blob_name'] = url.path
+
+
             # managed_disk_type
             new_result['os_disk_caching'] = result['properties']['storageProfile']['osDisk']['caching']
             new_result['os_type'] = result['properties']['storageProfile']['osDisk']['osType']
