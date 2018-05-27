@@ -406,7 +406,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
             # image
             # availability_set
 
-            vhd = result['properties']['osProfile'].get('vhd')
+            vhd = result['properties']['storageProfile']['osDisk'].get('vhd')
 
             if vhd is not None:
                 # "https://3b860b21860a84468b76aec7.blob.core.windows.net/testvm001/testvm001.vhd"
