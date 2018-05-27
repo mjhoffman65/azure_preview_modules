@@ -410,7 +410,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
 
             if vhd is not None:
                 # "https://3b860b21860a84468b76aec7.blob.core.windows.net/testvm001/testvm001.vhd"
-                url = urlparse(vhd['id'])
+                url = urlparse(vhd['uri'])
                 # url.path
                 # url.netloc
                 new_result['storage_account_name'] = vhd[url.netloc]
