@@ -413,7 +413,7 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
                 url = urlparse(vhd['uri'])
                 # url.path
                 # url.netloc
-                new_result['storage_account_name'] = vhd[url.netloc]
+                new_result['storage_account_name'] = url.netloc
                 new_result['storage_container_name'] = url.path
                 new_result['storage_blob_name'] = url.path
 
