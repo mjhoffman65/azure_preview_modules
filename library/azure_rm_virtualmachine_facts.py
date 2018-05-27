@@ -413,9 +413,9 @@ class AzureRMVirtualMachineFacts(AzureRMModuleBase):
                 url = urlparse(vhd['uri'])
                 # url.path
                 # url.netloc
-                new_result['storage_account_name'] = url.netloc
-                new_result['storage_container_name'] = url.path
-                new_result['storage_blob_name'] = url.path
+                new_result['storage_account_name'] = url.netloc.split('.')[0]
+                new_result['storage_container_name'] = url.path.split('/')[1]
+                new_result['storage_blob_name'] = url.path.split('/')[-1]
 
 
             # managed_disk_type
