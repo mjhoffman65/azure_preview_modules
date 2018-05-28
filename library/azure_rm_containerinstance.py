@@ -308,16 +308,21 @@ class AzureRMContainerInstance(AzureRMModuleBase):
                     if not self.check_mode:
                         self.delete_containerinstance()
 
+        self.results['aaa'] = 'AAA'
+
         if self.state == 'present':
 
             self.log("Need to Create / Update the container instance")
+            self.results['bbb'] = 'BBB'
 
             if self.force_update:
+                self.results['ccc'] = 'CCC'
                 self.results['changed'] = True
                 if self.check_mode:
                     return self.results
                 response = self.create_update_containerinstance()
 
+            self.results['ddd'] = 'DDD'
             self.results['id'] = response['id']
             self.results['provisioning_state'] = response['provisioning_state']
             self.results['ip_address'] = response['ip_address']['ip']
